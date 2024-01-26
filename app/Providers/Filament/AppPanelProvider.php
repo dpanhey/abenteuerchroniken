@@ -5,6 +5,7 @@ namespace App\Providers\Filament;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\MenuItem;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -26,10 +27,23 @@ class AppPanelProvider extends PanelProvider
             ->default()
             ->id('app')
             ->path('app')
-            ->login()
-            ->colors([
-                'primary' => Color::Amber,
+            ->profile()
+            ->userMenuItems([
+                'profile' => MenuItem::make()
+                    ->label(__('Profil bearbeiten')),
+                'logout' => MenuItem::make()
+                    ->label(__('Ausloggen'))
             ])
+            ->topNavigation()
+            ->spa()
+            ->font('Merriweather')
+            ->colors([
+                'primary' => Color::Sky,
+                'gray' => Color::Blue,
+            ])
+            ->brandName('Abenteuerchroniken')
+            ->darkMode(false)
+            ->viteTheme('resources/css/filament/app/theme.css')
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([

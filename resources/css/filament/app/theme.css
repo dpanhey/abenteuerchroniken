@@ -1,0 +1,31 @@
+@import '/vendor/filament/filament/resources/css/theme.css';
+
+@config 'tailwind.config.js';
+
+.fi-topbar {
+    @apply max-w-screen-xl mx-auto sm:px-6 lg:px-8 md:px-6 w-full top-2;
+
+    .fi-topbar-item-button {
+        @apply bg-white hover:bg-gray-50;
+    }
+
+    .fi-avatar {
+        @apply transition hover:scale-110 hover:drop-shadow-lg duration-300;
+    }
+
+    nav {
+        @apply drop-shadow-md rounded-lg;
+    }
+
+    li {
+        @apply border rounded-lg border-gray-200;
+    }
+}
+
+.fi-header-heading {
+    @apply px-4;
+}
+
+.fi-wi > div {
+    @apply drop-shadow-md rounded-lg;
+}
