@@ -31,7 +31,7 @@ class Login extends Component
             return;
         }
 
-        return redirect()->intended(route('home'));
+        return redirect()->intended(route('filament.app.pages.dashboard'));
     }
 
     public function render()

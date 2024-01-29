@@ -30,9 +30,8 @@ class AppPanelProvider extends PanelProvider
             ->profile()
             ->userMenuItems([
                 'profile' => MenuItem::make()
-                    ->label(__('Profil bearbeiten')),
+                    ->url('/user/profile'),
                 'logout' => MenuItem::make()
-                    ->label(__('Ausloggen'))
             ])
             ->topNavigation()
             ->spa()
@@ -41,7 +40,7 @@ class AppPanelProvider extends PanelProvider
                 'primary' => Color::Sky,
                 'gray' => Color::Blue,
             ])
-            ->brandName('Abenteuerchroniken')
+
             ->darkMode(false)
             ->viteTheme('resources/css/filament/app/theme.css')
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
