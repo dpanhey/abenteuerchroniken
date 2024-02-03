@@ -30,9 +30,7 @@ class CalendarWidget extends FullCalendarWidget
                         ->id($availability->id)
                         ->title($user->name)
                         ->start($availability->starts_at)
-                        ->end($availability->ends_at)
-                        ->backgroundColor($user->color)
-                        ->borderColor($user->color);
+                        ->end($availability->ends_at);
                 }
             )
             ->toArray();
@@ -99,7 +97,6 @@ class CalendarWidget extends FullCalendarWidget
                 ->mutateFormDataUsing(
                     function (array $data): array {
                         $data['user_id'] = auth()->id();
-                        $data['name'] = auth()->user()->name;
 
                         return $data;
                     }

@@ -17,7 +17,6 @@ class UserSeeder extends Seeder
 
         DB::table('users')->insert([
             'name' => 'Dustin',
-            'color' => 'rgb(95, 191, 28)',
             'email' => 'd.panhey@gmx.de',
             'password' => Hash::make('Saufnase'),
             'email_verified_at' => now(),

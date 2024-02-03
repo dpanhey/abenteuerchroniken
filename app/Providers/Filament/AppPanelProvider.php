@@ -2,16 +2,15 @@
 
 namespace App\Providers\Filament;
 
-use App\Filament\Pages\Auth\EditProfile;
+use App\Filament\AvatarProviders\BoringAvatarsProvider;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Navigation\MenuItem;
-use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
-use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -19,6 +18,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Jeffgreco13\FilamentBreezy\BreezyCore;
 use Saade\FilamentFullCalendar\FilamentFullCalendarPlugin;
 
 class AppPanelProvider extends PanelProvider
@@ -29,7 +29,7 @@ class AppPanelProvider extends PanelProvider
             ->default()
             ->id('app')
             ->path('app')
-            ->plugin(
+            ->plugins([
                 FilamentFullCalendarPlugin::make()
                     ->selectable(true)
                     ->editable(true)
@@ -53,14 +53,21 @@ class AppPanelProvider extends PanelProvider
                         'displayEventEnd' => true,
                         'slotMinTime' => '12:00:00',
                         'eventOverlap' => false
-                    ])
-            )
-            ->profile(EditProfile::class)
-            ->userMenuItems([
-                'profile' => MenuItem::make(),
-//                    ->url('/user/profile'),
-                'logout' => MenuItem::make()
+                    ]),
+                BreezyCore::make()
+                    ->myProfile(
+                        shouldRegisterUserMenu: true,
+                        shouldRegisterNavigation: false,
+                        hasAvatars: true,
+                        slug: 'mein-profil',
+                    )
+                    ->avatarUploadComponent(fn() => FileUpload::make('avatar_url')
+                        ->avatar()
+                        ->label('Profilbild')
+                        ->imageEditor()
+                        ->circleCropper())
             ])
+            ->defaultAvatarProvider(BoringAvatarsProvider::class)
             ->topNavigation()
             ->spa()
             ->font('Merriweather')
@@ -68,6 +75,7 @@ class AppPanelProvider extends PanelProvider
                 'primary' => Color::Sky,
                 'gray' => Color::Blue,
             ])
+            ->authGuard('web')
             ->darkMode(false)
             ->viteTheme('resources/css/filament/app/theme.css')
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
