@@ -6,7 +6,7 @@ use Filament\Pages\Dashboard as BaseDashboard;
 
 class Dashboard extends BaseDashboard
 {
-    protected static string $routePath = 'Kalender';
+    protected static string $routePath = 'kalender';
     protected static ?string $title = 'Kalender';
 
     protected int | string | array $columnSpan = [

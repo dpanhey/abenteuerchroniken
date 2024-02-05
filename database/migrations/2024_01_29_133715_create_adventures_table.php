@@ -15,7 +15,9 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->string('name');
-            $table->text('description');
+            $table->string('kurzbeschreibung')->nullable();
+            $table->text('beschreibung')->nullable();
+            $table->string('abenteuertyp')->nullable();
             $table->foreignId('user_id')->constrained();
         });
     }

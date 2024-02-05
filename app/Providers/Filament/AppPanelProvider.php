@@ -42,12 +42,12 @@ class AppPanelProvider extends PanelProvider
                             'right' => 'timeGridWeek,dayGridMonth,listMonth',
                         ],
                         'initialView' => 'timeGridWeek',
-//                        'hiddenDays' => [1, 2, 3, 4, 5],
                         'dayHeaderFormat' => [
                             'weekday' => 'long',
                         ],
                         'views' => [
                             'timeGridWeek' => [
+                                'hiddenDays' => [1, 2, 3, 4, 5],
                                 'dayHeaderFormat' => [
                                     'weekday' => 'long',
                                     'month' => 'numeric',
@@ -88,6 +88,7 @@ class AppPanelProvider extends PanelProvider
             ])
             ->defaultAvatarProvider(BoringAvatarsProvider::class)
             ->topNavigation()
+            ->breadcrumbs(false)
             ->spa()
             ->font('Merriweather')
             ->colors([

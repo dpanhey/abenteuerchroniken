@@ -4,14 +4,29 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Adventure extends Model
 {
     use HasFactory;
 
-    public function characters(): BelongsToMany
+    protected $fillable = [
+        'user_id',
+        'name',
+        'kurzbeschreibung',
+        'beschreibung',
+        'abenteuertyp'
+    ];
+
+    public function user(): BelongsTo
     {
-        return $this->belongsToMany(Character::class);
+        return $this->belongsTo(User::class);
+    }
+
+    public function characters(): HasMany
+    {
+        return $this->hasMany(Character::class);
     }
 }
