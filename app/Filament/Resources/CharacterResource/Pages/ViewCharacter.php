@@ -9,6 +9,7 @@ use Filament\Resources\Pages\ViewRecord;
 class ViewCharacter extends ViewRecord
 {
     protected static string $resource = CharacterResource::class;
+    protected static ?string $title = "Charakter ansehen";
     public function getHeading(): string
     {
         return $this->record->name;
