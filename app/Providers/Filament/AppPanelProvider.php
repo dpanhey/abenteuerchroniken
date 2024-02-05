@@ -46,6 +46,25 @@ class AppPanelProvider extends PanelProvider
                         'dayHeaderFormat' => [
                             'weekday' => 'long',
                         ],
+                        'views' => [
+                            'timeGridWeek' => [
+                                'dayHeaderFormat' => [
+                                    'weekday' => 'long',
+                                    'month' => 'numeric',
+                                    'day' => 'numeric',
+                                ],
+                            ],
+                            'listMonth' => [
+                                'listDayFormat' => [
+                                    'day' => 'numeric',
+                                    'month' => 'long',
+                                    'weekday' => 'long',
+                                ],
+                                'listDaySideFormat' => [
+                                    'year' => 'numeric',
+                                ],
+                            ],
+                        ],
                         'contentHeight' => 'auto',
                         'showNonCurrentDates' => false,
                         'height' => 'auto',

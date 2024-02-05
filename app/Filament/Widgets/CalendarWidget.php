@@ -49,15 +49,18 @@ class CalendarWidget extends FullCalendarWidget
                             'ends_at' => $arguments['event']['end'] ?? $record->ends_at
                         ]);
                     }
-                ),
+                )
+                ->modalHeading('Verfügbarkeit ändern.'),
             Actions\DeleteAction::make()
                 ->hidden(fn($record) => $record->user_id !== auth()->id())
+                ->modalHeading('Verfügbarkeit löschen.')
         ];
     }
 
     protected function viewAction(): Action
     {
-        return Actions\ViewAction::make();
+        return Actions\ViewAction::make()
+            ->modalHeading('Deine Verfügbarkeit.');
     }
 
     public function getFormSchema(): array

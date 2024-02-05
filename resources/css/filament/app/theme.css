@@ -20,6 +20,10 @@
     li {
         @apply border rounded-lg border-gray-200;
     }
+
+    .fi-dropdown-panel {
+        @apply left-auto end-0 !important;
+    }
 }
 
 .fi-header-heading {
