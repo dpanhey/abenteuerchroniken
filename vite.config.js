@@ -11,6 +11,11 @@ export default defineConfig({
         }),
         vue({
             template: {
+                compilerOptions: {
+                    isCustomElement: (tag) => {
+                        return ['Toast', 'ConfirmDialog'].includes(tag);
+                    },
+                },
                 transformAssetUrls: {
                     base: null,
                     includeAbsolute: false,
