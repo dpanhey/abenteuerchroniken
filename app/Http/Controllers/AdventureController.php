@@ -130,8 +130,9 @@ class AdventureController extends Controller
         }
 
         $adventure->chapters()->delete();
+        $adventure->locations()->detach();
         $adventure->delete();
 
-        return $this->index();
+        return redirect()->route('adventures.index');
     }
 }

@@ -110,9 +110,6 @@ class ChapterController extends Controller
 
         $chapter->delete();
 
-        $adventure->load('chapters');
-        return Inertia::render('Adventures/Show', [
-            'adventure' => fn () => AdventureResource::make($adventure),
-        ]);
+        return redirect()->route('adventures.show', $adventure);
     }
 }

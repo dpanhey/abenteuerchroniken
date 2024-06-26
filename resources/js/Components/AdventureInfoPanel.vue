@@ -2,7 +2,7 @@
 import Button from "primevue/button";
 import InputSwitch from "primevue/inputswitch";
 import {useForm} from "@inertiajs/vue3";
-import {ref, watch} from "vue";
+import {watch} from "vue";
 import TiptapEditor from "@/Components/TiptapEditor.vue";
 
 const props = defineProps(['adventure', 'isOwner']);
@@ -39,9 +39,8 @@ watch(() => props.adventure, (newAdventure) => {
                     <div v-if="isOwner"
                          class="flex gap-5">
                         <div class="text-nowrap">
-                            <form>
-                                <Button @submit.prevent="form.delete(route(`adventures.destroy`, adventure.slug))"
-                                        type="button"
+                            <form @submit.prevent="form.delete(route(`adventures.destroy`, adventure.slug))">
+                                <Button type="submit"
                                         raised
                                         severity="danger"
                                         label="Abenteuer löschen"
