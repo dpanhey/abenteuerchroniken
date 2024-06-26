@@ -101,6 +101,7 @@ class LocationController extends Controller
         $data = $request->validate([
             'name' => ['required', 'string', 'max:100'],
             'description' => 'string',
+            'public' => 'boolean',
         ]);
 
         $location->update($data);
@@ -116,6 +117,7 @@ class LocationController extends Controller
         $data = $request->validate([
             'name' => ['required', 'string', 'max:100'],
             'description' => 'string',
+            'public' => 'boolean',
         ]);
 
         $location->update($data);

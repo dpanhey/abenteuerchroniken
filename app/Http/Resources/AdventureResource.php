@@ -24,6 +24,7 @@ class AdventureResource extends JsonResource
             'locations' => $this->whenLoaded('locations', fn () => LocationResource::collection($this->locations)),
             'description' => $this->description,
             'html' => $this->html,
+            'public' => $this->public,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

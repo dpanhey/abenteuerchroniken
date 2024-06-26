@@ -23,6 +23,13 @@ class Location extends Model
         'public',
     ];
 
+    public function casts(): array
+    {
+        return [
+            'public' => 'boolean',
+        ];
+    }
+
     public function getSlugOptions(): SlugOptions
     {
         return SlugOptions::create()

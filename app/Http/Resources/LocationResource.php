@@ -20,6 +20,7 @@ class LocationResource extends JsonResource
             'slug' => $this->slug,
             'description' => $this->description,
             'html' => $this->html,
+            'public' => $this->public,
             'user_name' => $this->whenLoaded('user', fn () => $this->user->name),
         ];
     }

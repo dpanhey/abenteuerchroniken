@@ -3,12 +3,14 @@ import Button from "primevue/button";
 import {useForm} from "@inertiajs/vue3";
 import TiptapEditor from "@/Components/TiptapEditor.vue";
 import {watch} from "vue";
+import InputSwitch from "primevue/inputswitch";
 
 const props = defineProps(['adventure', 'location', 'isOwner']);
 
 const form = useForm({
     name: props.location.name,
-    description: props.location.description
+    description: props.location.description,
+    public: props.location.public
 });
 
 const saveData = () => {
@@ -18,6 +20,7 @@ const saveData = () => {
 watch(() => props.location, (newLocation) => {
     form.name = newLocation.name;
     form.description = newLocation.description;
+    form.public = newLocation.public;
 }, {immediate: true});
 </script>
 
@@ -62,8 +65,13 @@ watch(() => props.location, (newLocation) => {
                             </div>
                         </div>
                         <div class="w-1/2 max-w-md">
-                            <h3 class="text-lg font-semibold mt-4 mb-1">Erstellt und verwaltet von</h3>
+                            <h3 class="text-lg font-semibold mt-4 mb-1">Verwaltet von</h3>
                             <p class="prose prose-sm px-4 py-2 bg-surface-0 rounded-lg">{{ location.user_name }}</p>
+                        </div>
+                        <div class="flex flex-col items-center mt-4 gap-2">
+                            <label class="font-semibold text-lg">Öffentlich</label>
+                            <InputSwitch v-model="form.public"
+                                         @update:model-value="value => { form.public = value; saveData();}"/>
                         </div>
                     </div>
                     <div>

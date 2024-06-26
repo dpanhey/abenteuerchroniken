@@ -112,8 +112,7 @@ class AdventureController extends Controller
         $data = $request->validate([
             'title' => ['required', 'string', 'max:100'],
             'description' => ['nullable', 'max:1024'],
-            'cover' => 'string',
-            'status' => 'string',
+            'public' => 'boolean',
         ]);
 
         $adventure->update($data);

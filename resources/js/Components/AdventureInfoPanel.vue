@@ -1,14 +1,16 @@
 <script setup>
 import Button from "primevue/button";
+import InputSwitch from "primevue/inputswitch";
 import {useForm} from "@inertiajs/vue3";
-import {watch} from "vue";
+import {ref, watch} from "vue";
 import TiptapEditor from "@/Components/TiptapEditor.vue";
 
 const props = defineProps(['adventure', 'isOwner']);
 
 const form = useForm({
     title: props.adventure.title,
-    description: props.adventure.description
+    description: props.adventure.description,
+    public: props.adventure.public
 });
 
 const saveData = () => {
@@ -18,6 +20,7 @@ const saveData = () => {
 watch(() => props.adventure, (newAdventure) => {
     form.title = newAdventure.title;
     form.description = newAdventure.description;
+    form.public = newAdventure.public;
 }, {immediate: true});
 
 </script>
@@ -27,17 +30,24 @@ watch(() => props.adventure, (newAdventure) => {
         <div class="flex flex-col w-full">
             <div class="flex justify-between gap-5">
                 <h2 class="font-semibold text-2xl mb-4 ml-4">Abenteuerübersicht</h2>
-                <div v-if="isOwner"
-                     class="flex gap-5">
-                    <div class="text-nowrap">
-                        <form>
-                            <Button @submit.prevent="form.delete(route(`adventures.destroy`, adventure.slug))"
-                                    type="button"
-                                    raised
-                                    severity="danger"
-                                    label="Abenteuer löschen"
-                                    icon="ri-delete-bin-line"/>
-                        </form>
+                <div class="flex gap-10 items-center ">
+                    <div class="flex flex-row items-center gap-2">
+                        <label class="font-semibold text-lg">Öffentlich</label>
+                        <InputSwitch v-model="form.public"
+                                     @update:model-value="value => { form.public = value; saveData();}"/>
+                    </div>
+                    <div v-if="isOwner"
+                         class="flex gap-5">
+                        <div class="text-nowrap">
+                            <form>
+                                <Button @submit.prevent="form.delete(route(`adventures.destroy`, adventure.slug))"
+                                        type="button"
+                                        raised
+                                        severity="danger"
+                                        label="Abenteuer löschen"
+                                        icon="ri-delete-bin-line"/>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -47,7 +57,7 @@ watch(() => props.adventure, (newAdventure) => {
                         <h3 class="text-lg font-semibold mt-4 mb-1">Abenteuertitel</h3>
                         <TiptapEditor :modelValue="form.title"
                                       @update:modelValue="value => form.title = value"
-                                      @saveData="saveData()"
+                                      @saveData="saveData"
                                       :isMenuActive="false"
                                       :isReadOnly="!isOwner"/>
                         <div v-if="form.errors.title"
@@ -66,7 +76,7 @@ watch(() => props.adventure, (newAdventure) => {
                 <TiptapEditor :modelValue="form.description"
                               :htmlContent="props.adventure.html"
                               @update:modelValue="value => form.description = value"
-                              @saveData="saveData()"
+                              @saveData="saveData"
                               :isReadOnly="!isOwner"/>
                 <div v-if="form.errors.description"
                      class="text-red-500 mt-2">
