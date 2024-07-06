@@ -22,7 +22,7 @@ class NonPlayerCharacter extends Model
         'public',
     ];
 
-    public function cast(): array
+    public function casts(): array
     {
         return [
             'public' => 'boolean',

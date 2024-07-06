@@ -22,7 +22,7 @@ class Enemy extends Model
         'public',
     ];
 
-    protected function cast(): array
+    protected function casts(): array
     {
         return [
             'public' => 'boolean',
