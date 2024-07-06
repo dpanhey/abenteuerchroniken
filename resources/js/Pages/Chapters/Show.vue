@@ -3,7 +3,7 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import PageHeading from "@/Components/PageHeading.vue";
 import MainPanel from "@/Components/MainPanel.vue";
 import SidePanel from "@/Components/SidePanel.vue";
-import ChapterInfoPanel from "@/Components/ChapterInfoPanel.vue";
+import ChapterInfoPanel from "@/Components/InfoPanels/ChapterInfoPanel.vue";
 
 const props = defineProps(['chapter', 'adventure']);
 </script>

@@ -3,14 +3,19 @@ import {Link} from "@inertiajs/vue3";
 import Button from "primevue/button";
 import PanelMenu from "primevue/panelmenu";
 import Dialog from "primevue/dialog";
-import CreateChapterDialogForm from "@/Components/CreateChapterDialogForm.vue";
+import CreateChapterDialogForm from "@/Components/DialogForms/CreateChapterDialogForm.vue";
+import CreateEnemyDialogForm from "@/Components/DialogForms/CreateEnemyDialogForm.vue";
+import CreateLocationDialogForm from "@/Components/DialogForms/CreateLocationDialogForm.vue";
+import CreateNonPlayerCharacterDialogForm from "@/Components/DialogForms/CreateNonPlayerCharacterDialogForm.vue";
 import {ref, toRef} from "vue";
 import useAdventureMenuItems from "@/Composables/useAdventureMenuItems";
-import CreateLocationDialogForm from "@/Components/CreateLocationDialogForm.vue";
 
+// chapter aus props entfernen? nötig?
 const props = defineProps(['adventure', 'chapter']);
 const chapterDialogVisible = ref(false);
 const locationDialogVisible = ref(false);
+const nonPlayerCharacterDialogVisible = ref(false);
+const enemyDialogVisible = ref(false);
 
 function handleChapterFormSubmitted(success) {
     if (success) {
@@ -19,7 +24,17 @@ function handleChapterFormSubmitted(success) {
 }
 function handleLocationFormSubmitted(success) {
     if (success) {
-        visible.value = false;
+        locationDialogVisible.value = false;
+    }
+}
+function handleNonPlayerCharacterFormSubmitted(success) {
+    if (success) {
+        nonPlayerCharacterDialogVisible.value = false;
+    }
+}
+function handleEnemyFormSubmitted(success) {
+    if (success) {
+        enemyDialogVisible.value = false;
     }
 }
 
@@ -67,6 +82,22 @@ const {adventureItems} = useAdventureMenuItems(adventureRef);
                             icon="ri-add-box-line"
                             @click="locationDialogVisible = true">
                     </Button>
+                    <Button v-else-if="item.type === 'createNonPlayerCharacter'"
+                            raised
+                            size="small"
+                            :label="item.label"
+                            class="max-w-60 mt-1"
+                            icon="ri-add-box-line"
+                            @click="nonPlayerCharacterDialogVisible = true">
+                    </Button>
+                    <Button v-else-if="item.type === 'createEnemy'"
+                            raised
+                            size="small"
+                            :label="item.label"
+                            class="max-w-60 mt-1"
+                            icon="ri-add-box-line"
+                            @click="enemyDialogVisible = true">
+                    </Button>
                     <Button v-else
                             raised
                             outlined
@@ -88,9 +119,23 @@ const {adventureItems} = useAdventureMenuItems(adventureRef);
     </Dialog>
     <Dialog v-model:visible="locationDialogVisible"
             modal
-            header="Neues Kapitel erstellen">
+            header="Neuen Ort erstellen">
         <CreateLocationDialogForm :adventure="props.adventure"
                                  v-model:location="props.adventure.locations"
                                  @formSubmitted="handleLocationFormSubmitted"/>
+    </Dialog>
+    <Dialog v-model:visible="nonPlayerCharacterDialogVisible"
+            modal
+            header="Neuen NSC erstellen">
+        <CreateNonPlayerCharacterDialogForm :adventure="props.adventure"
+                                 v-model:nonplayercharacter="props.adventure.nonPlayerCharacters"
+                                 @formSubmitted="handleNonPlayerCharacterFormSubmitted"/>
+    </Dialog>
+    <Dialog v-model:visible="enemyDialogVisible"
+            modal
+            header="Neuen Gegner erstellen">
+        <CreateEnemyDialogForm :adventure="props.adventure"
+                                 v-model:enemy="props.adventure.enemies"
+                                 @formSubmitted="handleEnemyFormSubmitted"/>
     </Dialog>
 </template>

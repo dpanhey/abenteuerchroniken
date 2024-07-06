@@ -3,13 +3,14 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import PageHeading from "@/Components/PageHeading.vue";
 import MainPanel from "@/Components/MainPanel.vue";
 import SidePanel from "@/Components/SidePanel.vue";
-import LocationInfoPanel from "@/Components/InfoPanels/LocationInfoPanel.vue";
+import EnemyInfoPanel from "@/Components/InfoPanels/EnemyInfoPanel.vue";
 
-const props = defineProps(['location', 'adventure', 'isOwner']);
+
+const props = defineProps(['enemy', 'adventure', 'isOwner']);
 </script>
 
 <template>
-    <AppLayout title="Ortsübersicht">
+    <AppLayout title="Gegner-Übersicht">
         <template #header>
             <PageHeading>{{ adventure.title }}</PageHeading>
         </template>
@@ -17,9 +18,9 @@ const props = defineProps(['location', 'adventure', 'isOwner']);
         <MainPanel>
             <div class="flex w-full gap-10">
                 <SidePanel :adventure="adventure"/>
-                <LocationInfoPanel :location="location"
-                                   :adventure="adventure"
-                                   :isOwner="isOwner"/>
+                <EnemyInfoPanel :enemy="enemy"
+                                             :adventure="adventure"
+                                             :isOwner="isOwner"/>
             </div>
         </MainPanel>
     </AppLayout>

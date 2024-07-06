@@ -57,7 +57,7 @@ class ChapterController extends Controller
      */
     public function show(Adventure $adventure, Chapter $chapter)
     {
-        $adventure->load('chapters', 'locations');
+        $adventure->load('chapters', 'enemies', 'locations', 'nonplayercharacters');
         return Inertia::render('Chapters/Show', [
             'chapter' => ChapterResource::make($chapter),
             'adventure' => fn() => AdventureResource::make($adventure),

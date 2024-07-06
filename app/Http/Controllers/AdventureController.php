@@ -80,8 +80,10 @@ class AdventureController extends Controller
         }
 
         if ($adventure->user_id === Auth::user()->id) {
-            $adventure->load('chapters', 'locations');
+            $adventure->load('chapters', 'enemies', 'locations', 'nonplayercharacters');
         }
+
+        $adventure->load('user');
 
         $userId = Auth::id();
         $isOwner = $userId === $adventure->user_id;
@@ -111,7 +113,7 @@ class AdventureController extends Controller
 
         $data = $request->validate([
             'title' => ['required', 'string', 'max:100'],
-            'description' => ['nullable', 'max:1024'],
+            'description' => ['nullable'],
             'public' => 'boolean',
         ]);
 

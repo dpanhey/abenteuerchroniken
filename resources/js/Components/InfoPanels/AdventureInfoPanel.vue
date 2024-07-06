@@ -63,6 +63,8 @@ watch(() => props.adventure, (newAdventure) => {
                              class="text-red-500 mt-2">
                             {{ form.errors.title }}
                         </div>
+                        <h3 class="text-lg font-semibold mt-4 mb-1">Erstellt von</h3>
+                        <p class="prose prose-sm px-4 py-2 bg-surface-0 rounded-lg">{{ adventure.user_name }}</p>
                     </div>
                     <div class="w-1/2 max-w-md">
                         <h3 class="text-lg font-semibold mt-4 mb-1">Abenteuercover</h3>

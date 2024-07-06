@@ -5,7 +5,7 @@ import Button from "primevue/button/button.esm.js";
 import {Link} from "@inertiajs/vue3";
 import PageHeading from "@/Components/PageHeading.vue";
 import MainPanel from "@/Components/MainPanel.vue";
-import CreateAdventureForm from "@/Components/CreateAdventureForm.vue";
+import CreateAdventureForm from "@/Components/DialogForms/CreateAdventureDialogForm.vue";
 import Dialog from "primevue/dialog";
 import {ref} from "vue";
 
