@@ -3,7 +3,7 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import PageHeading from "@/Components/PageHeading.vue";
 import MainPanel from "@/Components/MainPanel.vue";
 import SidePanel from "@/Components/SidePanel.vue";
-import AdventureInfoPanel from "@/Components/AdventureInfoPanel.vue";
+import AdventureInfoPanel from "@/Components/InfoPanels/AdventureInfoPanel.vue";
 
 const props = defineProps(['adventure', 'isOwner']);
 

@@ -22,11 +22,12 @@ class AdventureResource extends JsonResource
             'user' => $this->whenLoaded('user', fn () => UserResource::make($this->user)),
             'chapters' => $this->whenLoaded('chapters', fn () => ChapterResource::collection($this->chapters)),
             'locations' => $this->whenLoaded('locations', fn () => LocationResource::collection($this->locations)),
+            'nonplayercharacters' => $this->whenLoaded('nonplayercharacters', fn () => NonPlayerCharacterResource::collection($this->nonplayercharacters)),
+            'enemies' => $this->whenLoaded('enemies', fn () => EnemyResource::collection($this->enemies)),
             'description' => $this->description,
             'html' => $this->html,
             'public' => $this->public,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'user_name' => $this->whenLoaded('user', fn () => $this->user->name),
         ];
     }
 }

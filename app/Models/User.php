@@ -79,4 +79,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Location::class);
     }
+
+    public function nonPlayerCharacters(): HasMany
+    {
+        return $this->hasMany(NonPlayerCharacter::class);
+    }
+
+    public function enemies(): HasMany
+    {
+        return $this->hasMany(Enemy::class);
+    }
 }

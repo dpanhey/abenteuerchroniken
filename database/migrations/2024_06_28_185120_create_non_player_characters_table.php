@@ -12,14 +12,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('locations', function (Blueprint $table) {
+        Schema::create('non_player_characters', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(User::class, 'user_id')->constrained()->cascadeOnDelete();
             $table->string('name');
-            $table->string('slug')->nullable();
+            $table->string('slug');
             $table->longText('description')->nullable();
             $table->longText('html')->nullable();
-            $table->boolean('public')->default(false);
+            $table->boolean('public')->default(true);
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('locations');
+        Schema::dropIfExists('non_player_characters');
     }
 };

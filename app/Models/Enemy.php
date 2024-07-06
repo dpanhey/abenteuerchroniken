@@ -7,26 +7,22 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Facades\Auth;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
-class Adventure extends Model
+class Enemy extends Model
 {
     use HasFactory;
     use HasSlug;
 
     protected $fillable = [
-        'title',
+        'name',
         'slug',
         'description',
-        'cover',
-        'status',
-        'public'
+        'public',
     ];
 
-    public function casts(): array
+    protected function cast(): array
     {
         return [
             'public' => 'boolean',
@@ -36,7 +32,7 @@ class Adventure extends Model
     public function getSlugOptions(): SlugOptions
     {
         return SlugOptions::create()
-            ->generateSlugsFrom('title')
+            ->generateSlugsFrom('name')
             ->saveSlugsTo('slug')
             ->slugsShouldBeNoLongerThan(50);
     }
@@ -59,23 +55,8 @@ class Adventure extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function chapters(): HasMany
+    public function adventures(): BelongsToMany
     {
-        return $this->hasMany(Chapter::class);
-    }
-
-    public function locations(): BelongsToMany
-    {
-        return $this->belongsToMany(Location::class);
-    }
-
-    public function nonPlayerCharacters(): BelongsToMany
-    {
-        return $this->belongsToMany(NonPlayerCharacter::class);
-    }
-
-    public function enemies(): BelongsToMany
-    {
-        return $this->belongsToMany(Enemy::class);
+        return $this->belongsToMany(Adventure::class);
     }
 }

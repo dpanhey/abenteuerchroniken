@@ -30,14 +30,14 @@ watch(() => props.adventure, (newAdventure) => {
         <div class="flex flex-col w-full">
             <div class="flex justify-between gap-5">
                 <h2 class="font-semibold text-2xl mb-4 ml-4">Abenteuerübersicht</h2>
-                <div class="flex gap-10 items-center ">
+                <div v-if="isOwner"
+                    class="flex gap-10 items-center ">
                     <div class="flex flex-row items-center gap-2">
                         <label class="font-semibold text-lg">Öffentlich</label>
                         <InputSwitch v-model="form.public"
                                      @update:model-value="value => { form.public = value; saveData();}"/>
                     </div>
-                    <div v-if="isOwner"
-                         class="flex gap-5">
+                    <div class="flex gap-5">
                         <div class="text-nowrap">
                             <form @submit.prevent="form.delete(route(`adventures.destroy`, adventure.slug))">
                                 <Button type="submit"
@@ -63,6 +63,8 @@ watch(() => props.adventure, (newAdventure) => {
                              class="text-red-500 mt-2">
                             {{ form.errors.title }}
                         </div>
+                        <h3 class="text-lg font-semibold mt-4 mb-1">Erstellt von</h3>
+                        <p class="prose prose-sm px-4 py-2 bg-surface-0 rounded-lg">{{ adventure.user_name }}</p>
                     </div>
                     <div class="w-1/2 max-w-md">
                         <h3 class="text-lg font-semibold mt-4 mb-1">Abenteuercover</h3>

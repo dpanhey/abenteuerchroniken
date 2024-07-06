@@ -48,7 +48,6 @@ class LocationController extends Controller
     {
         $data = $request->validate([
             'name' => ['required', 'string', 'max:100'],
-            'description' => 'string',
         ]);
 
         $location = Auth::user()->locations()->create($data);
@@ -73,7 +72,7 @@ class LocationController extends Controller
 
     public function showInAdventure(Adventure $adventure, Location $location)
     {
-        $adventure->load('chapters', 'locations');
+        $adventure->load('chapters', 'enemies', 'locations', 'nonplayercharacters');
         $location->load('user');
 
         $userId = Auth::id();

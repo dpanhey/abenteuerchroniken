@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\Location;
+use App\Models\Enemy;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
-class LocationPolicy
+class EnemyPolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -19,9 +19,9 @@ class LocationPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Location $location): Response
+    public function view(User $user, Enemy $enemy): Response
     {
-        return $location->public || $user->id === $location->user_id
+        return $enemy->public || $user->id === $enemy->user_id
             ? Response::allow()
             : Response::denyAsNotFound();
     }
@@ -37,9 +37,9 @@ class LocationPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Location $location): Response
+    public function update(User $user, Enemy $enemy): Response
     {
-        return $user->id === $location->user_id
+        return $user->id === $enemy->user_id
             ? Response::allow()
             : Response::denyAsNotFound();
     }
@@ -47,30 +47,33 @@ class LocationPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Location $location): Response
+    public function delete(User $user, Enemy $enemy): Response
     {
-        return $user->id === $location->user_id
+        return $user->id === $enemy->user_id
             ? Response::allow()
             : Response::denyAsNotFound();
+
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Location $location): Response
+    public function restore(User $user, Enemy $enemy): Response
     {
-        return $user->id === $location->user_id
+        return $user->id === $enemy->user_id
             ? Response::allow()
             : Response::denyAsNotFound();
+
     }
 
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Location $location): Response
+    public function forceDelete(User $user, Enemy $enemy): Response
     {
-        return $user->id === $location->user_id
+        return $user->id === $enemy->user_id
             ? Response::allow()
             : Response::denyAsNotFound();
+
     }
 }
