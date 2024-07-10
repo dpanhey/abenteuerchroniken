@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('title');
             $table->string('slug')->nullable();
             $table->longText('content')->nullable();
-            $table->longText('html')->nullable();
             $table->boolean('public')->default(false);
         });
     }

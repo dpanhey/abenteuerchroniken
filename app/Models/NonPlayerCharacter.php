@@ -42,14 +42,6 @@ class NonPlayerCharacter extends Model
         return 'slug';
     }
 
-    public function description(): Attribute
-    {
-        return Attribute::set(fn($value) => [
-            'description' => $value,
-            'html' => str($value)->markdown(),
-        ]);
-    }
-
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

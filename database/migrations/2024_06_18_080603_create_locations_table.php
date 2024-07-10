@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('name');
             $table->string('slug')->nullable();
             $table->longText('description')->nullable();
-            $table->longText('html')->nullable();
             $table->boolean('public')->default(false);
             $table->timestamps();
         });
