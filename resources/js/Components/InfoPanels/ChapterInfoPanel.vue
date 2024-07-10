@@ -2,7 +2,8 @@
 import Button from "primevue/button";
 import {useForm} from "@inertiajs/vue3";
 import TiptapEditor from "@/Components/TiptapEditor.vue";
-import {watch} from "vue";
+import {computed, ref, watch} from "vue";
+import TinymceEditor from "@/Components/TinymceEditor.vue";
 
 const props = defineProps(['adventure', 'chapter']);
 
@@ -14,6 +15,27 @@ const form = useForm({
 const saveData = () => {
     form.put(route('adventures.chapters.update', [props.adventure.slug, props.chapter.slug]), {preserveScroll: true}); // Save to the database
 };
+
+const isEditable = ref(false);
+
+const makeEditable = () => {
+    isEditable.value = true;
+};
+
+const saveEditorContent = () => {
+    isEditable.value = false;
+    saveData();
+};
+
+const closeEditor = () => {
+    isEditable.value = false;
+};
+
+const tooltipData = computed(() => {
+    return {
+        value: 'Zum Bearbeiten klicken', showDelay: 500, hideDelay: 300
+    }
+})
 
 watch(() => props.chapter, (newChapter) => {
     form.title = newChapter.title;
@@ -48,14 +70,27 @@ watch(() => props.chapter, (newChapter) => {
                     <div v-if="form.errors.title" class="text-red-500 mt-2">
                         {{ form.errors.title }}
                     </div>
-                    <h3 class="text-lg font-semibold mt-4 mb-1">Kapitelinhalt</h3>
-                    <TiptapEditor :modelValue="form.content"
-                                  :htmlContent="props.chapter.html"
-                                  @update:modelValue="value => form.content = value"
-                                  @saveData="saveData()"/>
-                    <div v-if="form.errors.content" class="text-red-500 mt-2">
-                        {{ form.errors.content }}
-                    </div>
+                    <section>
+                        <h3 class="text-lg font-semibold mt-4 mb-1">Abenteuerbeschreibung</h3>
+                        <div v-if="!isEditable"
+                             @click="makeEditable"
+                             class="bg-surface-0 rounded-lg"
+                             :class="props.isReadOnly ? 'hover:cursor-default' : 'hover:cursor-pointer'"
+                             v-tooltip.top="tooltipData"
+                        >
+                            <div class="p-4 prose prose-sm max-w-none bg-surface-0 rounded-lg"
+                                 v-html="chapter.content"></div>
+                        </div>
+                        <div v-else>
+                            <TinymceEditor v-model="form.content"
+                                           @saveEditorContent="saveEditorContent"
+                                           @closeEditor="closeEditor"/>
+                        </div>
+                        <div v-if="form.errors.description"
+                             class="text-red-500 mt-2">
+                            {{ form.errors.description }}
+                        </div>
+                    </section>
                 </div>
             </div>
         </div>

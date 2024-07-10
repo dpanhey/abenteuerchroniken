@@ -2,8 +2,9 @@
 import Button from "primevue/button";
 import {useForm} from "@inertiajs/vue3";
 import TiptapEditor from "@/Components/TiptapEditor.vue";
-import {watch} from "vue";
+import {computed, ref, watch} from "vue";
 import InputSwitch from "primevue/inputswitch";
+import TinymceEditor from "@/Components/TinymceEditor.vue";
 
 const props = defineProps(['adventure', 'location', 'isOwner']);
 
@@ -16,6 +17,30 @@ const form = useForm({
 const saveData = () => {
     form.put(route('adventures.locations.update', [props.adventure.slug, props.location.slug]), {preserveScroll: true}); // Save to the database
 };
+
+const isEditable = ref(false);
+
+const makeEditable = () => {
+    if (props.isOwner) {
+        isEditable.value = true;
+        editor.value?.setOptions({editable: true});
+    }
+};
+
+const saveEditorContent = () => {
+    isEditable.value = false;
+    saveData();
+};
+
+const closeEditor = () => {
+    isEditable.value = false;
+};
+
+const tooltipData = computed(() => {
+    return props.isOwner
+        ? {value: 'Zum Bearbeiten klicken', showDelay: 500, hideDelay: 300}
+        : {}
+});
 
 watch(() => props.location, (newLocation) => {
     form.name = newLocation.name;
@@ -74,17 +99,27 @@ watch(() => props.location, (newLocation) => {
                                          @update:model-value="value => { form.public = value; saveData();}"/>
                         </div>
                     </div>
-                    <div>
+                    <section>
                         <h3 class="text-lg font-semibold mt-4 mb-1">Ortsbeschreibung</h3>
-                        <TiptapEditor :modelValue="form.description"
-                                      :htmlContent="props.location.html"
-                                      @update:modelValue="value => form.description = value"
-                                      @saveData="saveData()"
-                                      :isReadOnly="!isOwner"/>
-                        <div v-if="form.errors.description" class="text-red-500 mt-2">
+                        <div v-if="!isEditable"
+                             @click="makeEditable"
+                             class="bg-surface-0 rounded-lg"
+                             :class="props.isOwner ? 'hover:cursor-pointer' : 'hover:cursor-default'"
+                             v-tooltip.top="tooltipData"
+                        >
+                            <div class="p-4 prose prose-sm max-w-none bg-surface-0 rounded-lg"
+                                 v-html="location.description"></div>
+                        </div>
+                        <div v-else>
+                            <TinymceEditor v-model="form.description"
+                                           @saveEditorContent="saveEditorContent"
+                                           @closeEditor="closeEditor"/>
+                        </div>
+                        <div v-if="form.errors.description"
+                             class="text-red-500 mt-2">
                             {{ form.errors.description }}
                         </div>
-                    </div>
+                    </section>
                 </div>
             </div>
         </div>

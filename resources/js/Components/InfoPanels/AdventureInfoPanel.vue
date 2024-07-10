@@ -2,8 +2,9 @@
 import Button from "primevue/button";
 import InputSwitch from "primevue/inputswitch";
 import {useForm} from "@inertiajs/vue3";
-import {watch} from "vue";
+import {computed, ref, watch} from "vue";
 import TiptapEditor from "@/Components/TiptapEditor.vue";
+import TinymceEditor from "@/Components/TinymceEditor.vue";
 
 const props = defineProps(['adventure', 'isOwner']);
 
@@ -16,6 +17,30 @@ const form = useForm({
 const saveData = () => {
     form.put(route('adventures.update', props.adventure.slug), {preserveScroll: true}); // Save to the database
 };
+
+const isEditable = ref(false);
+
+const makeEditable = () => {
+    if (props.isOwner) {
+        isEditable.value = true;
+        editor.value?.setOptions({editable: true});
+    }
+}
+
+const saveEditorContent = () => {
+    isEditable.value = false;
+    saveData();
+};
+
+const closeEditor = () => {
+    isEditable.value = false;
+};
+
+const tooltipData = computed(() => {
+    return props.isOwner
+        ? {value: 'Zum Bearbeiten klicken', showDelay: 500, hideDelay: 300}
+        : {}
+});
 
 watch(() => props.adventure, (newAdventure) => {
     form.title = newAdventure.title;
@@ -31,7 +56,7 @@ watch(() => props.adventure, (newAdventure) => {
             <div class="flex justify-between gap-5">
                 <h2 class="font-semibold text-2xl mb-4 ml-4">Abenteuerübersicht</h2>
                 <div v-if="isOwner"
-                    class="flex gap-10 items-center ">
+                     class="flex gap-10 items-center ">
                     <div class="flex flex-row items-center gap-2">
                         <label class="font-semibold text-lg">Öffentlich</label>
                         <InputSwitch v-model="form.public"
@@ -73,16 +98,27 @@ watch(() => props.adventure, (newAdventure) => {
                              :alt="adventure.title"/>
                     </div>
                 </div>
-                <h3 class="text-lg font-semibold mt-4 mb-1">Abenteuerbeschreibung</h3>
-                <TiptapEditor :modelValue="form.description"
-                              :htmlContent="props.adventure.html"
-                              @update:modelValue="value => form.description = value"
-                              @saveData="saveData"
-                              :isReadOnly="!isOwner"/>
-                <div v-if="form.errors.description"
-                     class="text-red-500 mt-2">
-                    {{ form.errors.description }}
-                </div>
+                <section>
+                    <h3 class="text-lg font-semibold mt-4 mb-1">Abenteuerbeschreibung</h3>
+                    <div v-if="!isEditable"
+                         @click="makeEditable"
+                         class="bg-surface-0 rounded-lg"
+                         :class="props.isOwner ? 'hover:cursor-pointer' : 'hover:cursor-default'"
+                         v-tooltip.top="tooltipData"
+                    >
+                        <div class="p-4 prose prose-sm max-w-none bg-surface-0 rounded-lg"
+                             v-html="adventure.description"></div>
+                    </div>
+                    <div v-else>
+                        <TinymceEditor v-model="form.description"
+                                       @saveEditorContent="saveEditorContent"
+                                       @closeEditor="closeEditor"/>
+                    </div>
+                    <div v-if="form.errors.description"
+                         class="text-red-500 mt-2">
+                        {{ form.errors.description }}
+                    </div>
+                </section>
             </div>
         </div>
         <div class="flex">

@@ -34,14 +34,6 @@ class Chapter extends Model
         return 'slug';
     }
 
-    public function content(): Attribute
-    {
-        return Attribute::set(fn ($value) => [
-            'content' => $value,
-            'html' => str($value)->markdown(),
-        ]);
-    }
-
     public function adventure(): BelongsTo
     {
         return $this->belongsTo(Adventure::class);

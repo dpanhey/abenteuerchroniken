@@ -58,7 +58,7 @@ defineProps(['adventures']);
                                                         {{ adventure.title }}
                                                     </h3>
                                                 </div>
-                                                <div v-html="adventure.html"
+                                                <div v-html="adventure.description"
                                                      class="prose prose-sm text-surface-700 dark:text-surface-0/80 mt-2 text-justify overflow-ellipsis">
                                                 </div>
 
