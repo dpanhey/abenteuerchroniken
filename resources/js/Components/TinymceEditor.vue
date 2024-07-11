@@ -3,6 +3,7 @@ import Editor from '@tinymce/tinymce-vue'
 import 'tinymce/icons/default/icons.min.js';
 import 'tinymce/themes/silver/theme.min.js';
 import 'tinymce/models/dom/model.min.js';
+import 'tinymce/langs/de.js';
 import 'tinymce/plugins/advlist';
 import 'tinymce/plugins/lists';
 import 'tinymce/plugins/link';
@@ -14,6 +15,7 @@ import 'tinymce/plugins/fullscreen';
 import 'tinymce/plugins/save';
 import 'tinymce/plugins/quickbars';
 import 'tinymce/plugins/autoresize';
+import 'tinymce/skins/ui/oxide/skin.js';
 import contentUiSkinCss from 'tinymce/skins/ui/oxide/content.js';
 import contentCss from 'tinymce/skins/content/default/content.js';
 
