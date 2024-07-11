@@ -23,7 +23,6 @@ const isEditable = ref(false);
 const makeEditable = () => {
     if (props.isOwner) {
         isEditable.value = true;
-        editor.value?.setOptions({editable: true});
     }
 };
 
