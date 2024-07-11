@@ -9,13 +9,14 @@ import 'tinymce/plugins/lists';
 import 'tinymce/plugins/link';
 import 'tinymce/plugins/image';
 import 'tinymce/plugins/table';
-import 'tinymce/plugins/help';
 import 'tinymce/plugins/wordcount';
 import 'tinymce/plugins/fullscreen';
 import 'tinymce/plugins/save';
 import 'tinymce/plugins/quickbars';
 import 'tinymce/plugins/autoresize';
 import 'tinymce/skins/ui/oxide/skin.js';
+import '../tinymce/js/tinymce/skins/ui/oxide/content.js';
+import '../tinymce/js/tinymce/skins/content/default/content.min.css';
 
 const content = defineModel();
 
@@ -34,9 +35,9 @@ const editorConfig = {
     branding: false,
     min_height: 600,
     menu: {
-        file: { title: 'File', items: 'print' },
+        file: {title: 'File', items: 'print'},
     },
-    plugins: 'advlist lists link image table help wordcount fullscreen save quickbars autoresize',
+    plugins: 'advlist lists link image table wordcount fullscreen save quickbars autoresize',
     quickbars_selection_toolbar: 'bold italic underline strikethrough | bullist numlist | blockquote quicklink | h2 h3 h4 h5 h6 | outdent indent',
     toolbar: 'undo redo | styles | bold formatting | lists | alignment | fullscreen | outdent indent | save cancel',
     toolbar_groups: {
