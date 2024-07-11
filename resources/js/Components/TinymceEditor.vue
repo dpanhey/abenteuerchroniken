@@ -14,9 +14,6 @@ import 'tinymce/plugins/fullscreen';
 import 'tinymce/plugins/save';
 import 'tinymce/plugins/quickbars';
 import 'tinymce/plugins/autoresize';
-import 'tinymce/skins/ui/oxide/skin.js';
-import '../tinymce/js/tinymce/skins/ui/oxide/content.js';
-import '../tinymce/js/tinymce/skins/content/default/content.min.css';
 
 const content = defineModel();
 
@@ -67,6 +64,7 @@ const editorConfig = {
     save_oncancelcallback: () => {
         cancel();
     },
+    content_css: false,
 };
 
 </script>
