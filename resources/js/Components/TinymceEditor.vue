@@ -1,5 +1,21 @@
 <script setup>
 import Editor from '@tinymce/tinymce-vue'
+import 'tinymce/icons/default/icons.min.js';
+import 'tinymce/themes/silver/theme.min.js';
+import 'tinymce/models/dom/model.min.js';
+import 'tinymce/plugins/advlist';
+import 'tinymce/plugins/lists';
+import 'tinymce/plugins/link';
+import 'tinymce/plugins/image';
+import 'tinymce/plugins/table';
+import 'tinymce/plugins/help';
+import 'tinymce/plugins/wordcount';
+import 'tinymce/plugins/fullscreen';
+import 'tinymce/plugins/save';
+import 'tinymce/plugins/quickbars';
+import 'tinymce/plugins/autoresize';
+import contentUiSkinCss from 'tinymce/skins/ui/oxide/content.js';
+import contentCss from 'tinymce/skins/content/default/content.js';
 
 const content = defineModel();
 
@@ -49,18 +65,11 @@ const editorConfig = {
     },
     save_oncancelcallback: () => {
         cancel();
-    }
+    },
+    content_css: 'default',
+    skin_url: 'default',
 };
-// toolbar: [
-//     { name: 'history', items: [ 'undo', 'redo' ] },
-//     { name: 'styles', items: [ 'styles' ] },
-//     { name: 'formatting', items: [ 'bold', 'italic' ] },
-//     { name: 'alignment', items: [ 'alignleft', 'aligncenter', 'alignright', 'alignjustify' ] },
-//     { name: 'indentation', items: [ 'outdent', 'indent' ] },
-//     { name: 'link', items: [ 'link', 'unlink' ] },
-//     { name: 'insert', items: [ 'image', 'table', 'help' ] },
-//     { name: 'tools', items: [ 'fullscreen' ] },
-// ],
+
 </script>
 
 <template>
