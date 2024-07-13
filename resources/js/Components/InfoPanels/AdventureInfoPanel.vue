@@ -100,7 +100,7 @@ watch(() => props.adventure, (newAdventure) => {
                                         icon="ri-edit-2-line"
                                         @click="openInput"/>
                             </div>
-                            <div v-if="editorIsOpen && isOwner"
+                            <div v-if="inputIsOpen && isOwner"
                                  class="flex gap-2">
                                 <Button rounded
                                         raised
