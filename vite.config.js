@@ -7,7 +7,6 @@ export default defineConfig({
         laravel({
             input: [
                 'resources/js/app.js',
-                'resources/js/tinymce/js/tinymce/tinymce.min.js',
             ],
             ssr: 'resources/js/ssr.js',
             refresh: true,
