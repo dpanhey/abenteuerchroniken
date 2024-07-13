@@ -20,11 +20,12 @@
         "vue": "^3.3.13"
     },
     "dependencies": {
-        "@tinymce/tinymce-vue": "^5.1.1",
+        "@ckeditor/ckeditor5-vue": "^6.0.0",
         "@tiptap/extension-link": "^2.4.0",
         "@tiptap/pm": "^2.4.0",
         "@tiptap/starter-kit": "^2.4.0",
         "@tiptap/vue-3": "^2.4.0",
+        "ckeditor5": "^42.0.1",
         "clockwork-browser": "^1.1.2",
         "primevue": "^3.52.0",
         "remixicon": "^4.2.0",

@@ -1,9 +1,9 @@
 <script setup>
 import Button from "primevue/button";
 import {useForm} from "@inertiajs/vue3";
-import TiptapEditor from "@/Components/TiptapEditor.vue";
-import {computed, ref, watch} from "vue";
-import TinymceEditor from "@/Components/TinymceEditor.vue";
+import {ref, watch} from "vue";
+import InputText from "primevue/inputtext";
+import WysiwygEditor from "@/Components/WysiwygEditor.vue";
 
 const props = defineProps(['adventure', 'chapter']);
 
@@ -16,26 +16,36 @@ const saveData = () => {
     form.put(route('adventures.chapters.update', [props.adventure.slug, props.chapter.slug]), {preserveScroll: true}); // Save to the database
 };
 
-const isEditable = ref(false);
+const editorIsOpen = ref(false);
+const inputIsOpen = ref(false);
 
-const makeEditable = () => {
-    isEditable.value = true;
-};
+const openEditor = () => {
+    editorIsOpen.value = true;
+}
 
-const saveEditorContent = () => {
-    isEditable.value = false;
+const saveEditor = () => {
+    editorIsOpen.value = false;
     saveData();
-};
+}
 
 const closeEditor = () => {
-    isEditable.value = false;
+    editorIsOpen.value = false;
+    form.description = props.chapter.content;
 };
 
-const tooltipData = computed(() => {
-    return {
-        value: 'Zum Bearbeiten klicken', showDelay: 500, hideDelay: 300
-    }
-})
+const openInput = () => {
+    inputIsOpen.value = true;
+}
+
+const saveInput = () => {
+    inputIsOpen.value = false;
+    saveData();
+}
+
+const closeInput = () => {
+    inputIsOpen.value = false;
+    form.title = props.chapter.title;
+};
 
 watch(() => props.chapter, (newChapter) => {
     form.title = newChapter.title;
@@ -62,33 +72,92 @@ watch(() => props.chapter, (newChapter) => {
             </div>
             <div class="flex gap-10">
                 <div class="w-full">
-                    <h3 class="text-lg font-semibold mt-4 mb-1">Kapiteltitel</h3>
-                    <TiptapEditor :modelValue="form.title"
-                                  @update:modelValue="value => form.title = value"
-                                  @saveData="saveData()"
-                                  :isMenuActive="false"/>
-                    <div v-if="form.errors.title" class="text-red-500 mt-2">
+                    <div class="flex gap-2 mt-4 mb-1 items-center">
+                        <h3 class="text-lg font-semibold">Kapiteltitel</h3>
+                        <div v-if="!inputIsOpen">
+                            <Button rounded
+                                    raised
+                                    class="font-medium text-lg !p-0"
+                                    aria-label="Bearbeiten"
+                                    severity="contrast"
+                                    icon="ri-edit-2-line"
+                                    @click="openInput"/>
+                        </div>
+                        <div v-else
+                             class="flex gap-2">
+                            <Button rounded
+                                    raised
+                                    class="font-medium text-lg !p-0"
+                                    aria-label="Speichern"
+                                    severity="success"
+                                    icon="ri-save-2-line"
+                                    @click="saveInput"/>
+                            <Button rounded
+                                    raised
+                                    class="font-medium text-lg !p-0"
+                                    aria-label="Abbrechen"
+                                    severity="danger"
+                                    icon="ri-close-line"
+                                    @click="closeInput"/>
+                        </div>
+                    </div>
+                    <div v-if="!inputIsOpen"
+                         class="bg-surface-0 rounded-lg">
+                        <div class="prose prose-sm px-4 py-2 bg-surface-0 rounded-lg"
+                             v-html="chapter.title">
+                        </div>
+                    </div>
+                    <div class="bg-surface-0 rounded-lg"
+                         v-else>
+                        <InputText class="w-full prose prose-sm px-4 py-2 bg-surface-0 rounded-lg"
+                                   v-model="form.title"/>
+                    </div>
+                    <div v-if="form.errors.title"
+                         class="text-red-500 mt-2">
                         {{ form.errors.title }}
                     </div>
                     <section>
-                        <h3 class="text-lg font-semibold mt-4 mb-1">Abenteuerbeschreibung</h3>
-                        <div v-if="!isEditable"
-                             @click="makeEditable"
-                             class="bg-surface-0 rounded-lg"
-                             :class="props.isReadOnly ? 'hover:cursor-default' : 'hover:cursor-pointer'"
-                             v-tooltip.top="tooltipData"
-                        >
+                        <div class="flex gap-2 mt-4 mb-1 items-center">
+                            <h3 class="text-lg font-semibold">Kapitelbeschreibung</h3>
+                            <div v-if="!editorIsOpen">
+                                <Button rounded
+                                        raised
+                                        class="font-medium text-lg !p-0"
+                                        aria-label="Bearbeiten"
+                                        severity="contrast"
+                                        icon="ri-edit-2-line"
+                                        @click="openEditor"/>
+                            </div>
+                            <div class="flex gap-2"
+                                 v-else>
+                                <Button rounded
+                                        raised
+                                        class="font-medium text-lg !p-0"
+                                        aria-label="Speichern"
+                                        severity="success"
+                                        icon="ri-save-2-line"
+                                        @click="saveEditor"/>
+                                <Button rounded
+                                        raised
+                                        class="font-medium text-lg !p-0"
+                                        aria-label="Abbrechen"
+                                        severity="danger"
+                                        icon="ri-close-line"
+                                        @click="closeEditor"/>
+                            </div>
+                        </div>
+                        <div v-if="!editorIsOpen"
+                             class="bg-surface-0 rounded-lg">
                             <div class="p-4 prose prose-sm max-w-none bg-surface-0 rounded-lg"
-                                 v-html="chapter.content"></div>
+                                 v-html="chapter.content">
+                            </div>
                         </div>
                         <div v-else>
-                            <TinymceEditor v-model="form.content"
-                                           @saveEditorContent="saveEditorContent"
-                                           @closeEditor="closeEditor"/>
+                            <WysiwygEditor v-model="form.content"/>
                         </div>
-                        <div v-if="form.errors.description"
+                        <div v-if="form.errors.content"
                              class="text-red-500 mt-2">
-                            {{ form.errors.description }}
+                            {{ form.errors.content }}
                         </div>
                     </section>
                 </div>

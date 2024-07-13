@@ -2,9 +2,9 @@
 import Button from "primevue/button";
 import InputSwitch from "primevue/inputswitch";
 import {useForm} from "@inertiajs/vue3";
-import {computed, ref, watch} from "vue";
-import TiptapEditor from "@/Components/TiptapEditor.vue";
-import TinymceEditor from "@/Components/TinymceEditor.vue";
+import {ref, watch} from "vue";
+import WysiwygEditor from "@/Components/WysiwygEditor.vue";
+import InputText from "primevue/inputtext";
 
 const props = defineProps(['adventure', 'isOwner']);
 
@@ -18,28 +18,40 @@ const saveData = () => {
     form.put(route('adventures.update', props.adventure.slug), {preserveScroll: true}); // Save to the database
 };
 
-const isEditable = ref(false);
+const editorIsOpen = ref(false);
+const inputIsOpen = ref(false);
 
-const makeEditable = () => {
+const openEditor = () => {
     if (props.isOwner) {
-        isEditable.value = true;
+        editorIsOpen.value = true;
     }
 }
 
-const saveEditorContent = () => {
-    isEditable.value = false;
+const saveEditor = () => {
+    editorIsOpen.value = false;
     saveData();
-};
+}
 
 const closeEditor = () => {
-    isEditable.value = false;
+    editorIsOpen.value = false;
+    form.description = props.adventure.description;
 };
 
-const tooltipData = computed(() => {
-    return props.isOwner
-        ? {value: 'Zum Bearbeiten klicken', showDelay: 500, hideDelay: 300}
-        : {}
-});
+const openInput = () => {
+    if (props.isOwner) {
+        inputIsOpen.value = true;
+    }
+}
+
+const saveInput = () => {
+    inputIsOpen.value = false;
+    saveData();
+}
+
+const closeInput = () => {
+    inputIsOpen.value = false;
+    form.title = props.adventure.title;
+};
 
 watch(() => props.adventure, (newAdventure) => {
     form.title = newAdventure.title;
@@ -77,12 +89,46 @@ watch(() => props.adventure, (newAdventure) => {
             <div class="flex flex-col">
                 <div class="flex gap-10">
                     <div class="flex flex-col w-1/2 max-w-md">
-                        <h3 class="text-lg font-semibold mt-4 mb-1">Abenteuertitel</h3>
-                        <TiptapEditor :modelValue="form.title"
-                                      @update:modelValue="value => form.title = value"
-                                      @saveData="saveData"
-                                      :isMenuActive="false"
-                                      :isReadOnly="!isOwner"/>
+                        <div class="flex gap-2 mt-4 mb-1 items-center">
+                            <h3 class="text-lg font-semibold">Abenteuertitel</h3>
+                            <div v-if="!inputIsOpen && isOwner">
+                                <Button rounded
+                                        raised
+                                        class="font-medium text-lg !p-0"
+                                        aria-label="Bearbeiten"
+                                        severity="contrast"
+                                        icon="ri-edit-2-line"
+                                        @click="openInput"/>
+                            </div>
+                            <div v-if="editorIsOpen && isOwner"
+                                 class="flex gap-2">
+                                <Button rounded
+                                        raised
+                                        class="font-medium text-lg !p-0"
+                                        aria-label="Speichern"
+                                        severity="success"
+                                        icon="ri-save-2-line"
+                                        @click="saveInput"/>
+                                <Button rounded
+                                        raised
+                                        class="font-medium text-lg !p-0"
+                                        aria-label="Abbrechen"
+                                        severity="danger"
+                                        icon="ri-close-line"
+                                        @click="closeInput"/>
+                            </div>
+                        </div>
+                        <div v-if="!inputIsOpen"
+                             class="bg-surface-0 rounded-lg">
+                            <div class="prose prose-sm px-4 py-2 bg-surface-0 rounded-lg"
+                                 v-html="adventure.title">
+                            </div>
+                        </div>
+                        <div class="bg-surface-0 rounded-lg"
+                             v-else>
+                            <InputText class="w-full prose prose-sm px-4 py-2 bg-surface-0 rounded-lg"
+                                       v-model="form.title"/>
+                        </div>
                         <div v-if="form.errors.title"
                              class="text-red-500 mt-2">
                             {{ form.errors.title }}
@@ -98,20 +144,43 @@ watch(() => props.adventure, (newAdventure) => {
                     </div>
                 </div>
                 <section>
-                    <h3 class="text-lg font-semibold mt-4 mb-1">Abenteuerbeschreibung</h3>
-                    <div v-if="!isEditable"
-                         @click="makeEditable"
-                         class="bg-surface-0 rounded-lg"
-                         :class="props.isOwner ? 'hover:cursor-pointer' : 'hover:cursor-default'"
-                         v-tooltip.top="tooltipData"
-                    >
+                    <div class="flex gap-2 mt-4 mb-1 items-center">
+                        <h3 class="text-lg font-semibold">Abenteuerbeschreibung</h3>
+                        <div v-if="!editorIsOpen && isOwner">
+                            <Button rounded
+                                    raised
+                                    class="font-medium text-lg !p-0"
+                                    aria-label="Bearbeiten"
+                                    severity="contrast"
+                                    icon="ri-edit-2-line"
+                                    @click="openEditor"/>
+                        </div>
+                        <div class="flex gap-2"
+                             v-if="editorIsOpen && isOwner">
+                            <Button rounded
+                                    raised
+                                    class="font-medium text-lg !p-0"
+                                    aria-label="Speichern"
+                                    severity="success"
+                                    icon="ri-save-2-line"
+                                    @click="saveEditor"/>
+                            <Button rounded
+                                    raised
+                                    class="font-medium text-lg !p-0"
+                                    aria-label="Abbrechen"
+                                    severity="danger"
+                                    icon="ri-close-line"
+                                    @click="closeEditor"/>
+                        </div>
+                    </div>
+                    <div v-if="!editorIsOpen"
+                         class="bg-surface-0 rounded-lg">
                         <div class="p-4 prose prose-sm max-w-none bg-surface-0 rounded-lg"
-                             v-html="adventure.description"></div>
+                             v-html="adventure.description">
+                        </div>
                     </div>
                     <div v-else>
-                        <TinymceEditor v-model="form.description"
-                                       @saveEditorContent="saveEditorContent"
-                                       @closeEditor="closeEditor"/>
+                        <WysiwygEditor v-model="form.description"/>
                     </div>
                     <div v-if="form.errors.description"
                          class="text-red-500 mt-2">

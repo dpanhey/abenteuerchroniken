@@ -99,7 +99,7 @@ class LocationController extends Controller
     {
         $data = $request->validate([
             'name' => ['required', 'string', 'max:100'],
-            'description' => 'string',
+            'description' => 'nullable',
             'public' => 'boolean',
         ]);
 
@@ -115,7 +115,7 @@ class LocationController extends Controller
     {
         $data = $request->validate([
             'name' => ['required', 'string', 'max:100'],
-            'description' => 'string',
+            'description' => 'nullable',
             'public' => 'boolean',
         ]);
 
