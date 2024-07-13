@@ -5,6 +5,8 @@ import {useForm} from "@inertiajs/vue3";
 import {ref, watch} from "vue";
 import WysiwygEditor from "@/Components/WysiwygEditor.vue";
 import InputText from "primevue/inputtext";
+import {useConfirm} from "primevue/useconfirm";
+import ConfirmPopup from "primevue/confirmpopup";
 
 const props = defineProps(['adventure', 'isOwner']);
 
@@ -14,8 +16,12 @@ const form = useForm({
     public: props.adventure.public
 });
 
+const deleteAdventure = () => {
+    form.delete(route('adventures.destroy', props.adventure.slug), {preserveScroll: true});;
+};
+
 const saveData = () => {
-    form.put(route('adventures.update', props.adventure.slug), {preserveScroll: true}); // Save to the database
+    form.put(route('adventures.update', props.adventure.slug)); // Save to the database
 };
 
 const editorIsOpen = ref(false);
@@ -53,6 +59,47 @@ const closeInput = () => {
     form.title = props.adventure.title;
 };
 
+const confirm = useConfirm();
+
+const confirmDelete = () => {
+    confirm.require({
+        target: event.currentTarget,
+        message: 'Abenteuer löschen?',
+        icon: 'ri-alert-line',
+        acceptLabel: 'Löschen',
+        rejectLabel: 'Abbrechen',
+        accept: () => {
+            deleteAdventure();
+        }
+    });
+};
+
+const confirmCloseInput = () => {
+    confirm.require({
+        target: event.currentTarget,
+        message: 'Änderungen verwerfen?',
+        icon: 'ri-alert-line',
+        acceptLabel: 'Verwerfen',
+        rejectLabel: 'Abbrechen',
+        accept: () => {
+            closeInput();
+        }
+    });
+};
+
+const confirmCloseEditor = () => {
+    confirm.require({
+        target: event.currentTarget,
+        message: 'Änderungen verwerfen?',
+        icon: 'ri-alert-line',
+        acceptLabel: 'Verwerfen',
+        rejectLabel: 'Abbrechen',
+        accept: () => {
+            closeEditor();
+        }
+    });
+};
+
 watch(() => props.adventure, (newAdventure) => {
     form.title = newAdventure.title;
     form.description = newAdventure.description;
@@ -62,6 +109,7 @@ watch(() => props.adventure, (newAdventure) => {
 </script>
 
 <template>
+    <ConfirmPopup></ConfirmPopup>
     <div class="min-h-screen h-fit flex flex-col w-full p-6 bg-surface-100 dark:bg-surface-900 rounded-lg gap-24">
         <div class="flex flex-col w-full">
             <div class="flex justify-between gap-5">
@@ -75,13 +123,11 @@ watch(() => props.adventure, (newAdventure) => {
                     </div>
                     <div class="flex gap-5">
                         <div class="text-nowrap">
-                            <form @submit.prevent="form.delete(route(`adventures.destroy`, adventure.slug))">
-                                <Button type="submit"
-                                        raised
-                                        severity="danger"
-                                        label="Abenteuer löschen"
-                                        icon="ri-delete-bin-line"/>
-                            </form>
+                            <Button raised
+                                    @click="confirmDelete($event)"
+                                    severity="danger"
+                                    label="Abenteuer löschen"
+                                    icon="ri-delete-bin-line"/>
                         </div>
                     </div>
                 </div>
@@ -115,7 +161,7 @@ watch(() => props.adventure, (newAdventure) => {
                                         aria-label="Abbrechen"
                                         severity="danger"
                                         icon="ri-close-line"
-                                        @click="closeInput"/>
+                                        @click="confirmCloseInput"/>
                             </div>
                         </div>
                         <div v-if="!inputIsOpen"
@@ -170,7 +216,7 @@ watch(() => props.adventure, (newAdventure) => {
                                     aria-label="Abbrechen"
                                     severity="danger"
                                     icon="ri-close-line"
-                                    @click="closeEditor"/>
+                                    @click="confirmCloseEditor"/>
                         </div>
                     </div>
                     <div v-if="!editorIsOpen"

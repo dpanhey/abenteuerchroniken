@@ -5,6 +5,8 @@ import {ref, watch} from "vue";
 import InputSwitch from "primevue/inputswitch";
 import InputText from "primevue/inputtext";
 import WysiwygEditor from "@/Components/WysiwygEditor.vue";
+import {useConfirm} from "primevue/useconfirm";
+import ConfirmPopup from "primevue/confirmpopup";
 
 const props = defineProps(['adventure', 'location', 'isOwner']);
 
@@ -16,6 +18,10 @@ const form = useForm({
 
 const saveData = () => {
     form.put(route('adventures.locations.update', [props.adventure.slug, props.location.slug]), {preserveScroll: true}); // Save to the database
+};
+
+const deleteLocation = () => {
+    form.delete(route('adventures.locations.destroy', [props.adventure, props.location.slug]));
 };
 
 const editorIsOpen = ref(false);
@@ -53,6 +59,47 @@ const closeInput = () => {
     form.title = props.location.name;
 };
 
+const confirm = useConfirm();
+
+const confirmDelete = () => {
+    confirm.require({
+        target: event.currentTarget,
+        message: 'Ort löschen?',
+        icon: 'ri-alert-line',
+        acceptLabel: 'Löschen',
+        rejectLabel: 'Abbrechen',
+        accept: () => {
+            deleteLocation();
+        }
+    });
+};
+
+const confirmCloseInput = () => {
+    confirm.require({
+        target: event.currentTarget,
+        message: 'Änderungen verwerfen?',
+        icon: 'ri-alert-line',
+        acceptLabel: 'Verwerfen',
+        rejectLabel: 'Abbrechen',
+        accept: () => {
+            closeInput();
+        }
+    });
+};
+
+const confirmCloseEditor = () => {
+    confirm.require({
+        target: event.currentTarget,
+        message: 'Änderungen verwerfen?',
+        icon: 'ri-alert-line',
+        acceptLabel: 'Verwerfen',
+        rejectLabel: 'Abbrechen',
+        accept: () => {
+            closeEditor();
+        }
+    });
+};
+
 watch(() => props.location, (newLocation) => {
     form.name = newLocation.name;
     form.description = newLocation.description;
@@ -61,6 +108,7 @@ watch(() => props.location, (newLocation) => {
 </script>
 
 <template>
+    <ConfirmPopup></ConfirmPopup>
     <div class="min-h-screen h-fit flex flex-col w-full p-6 bg-surface-100 dark:bg-surface-900 rounded-lg gap-24">
         <div class="flex flex-col w-full">
             <div class="flex justify-between gap-5">
@@ -75,14 +123,13 @@ watch(() => props.location, (newLocation) => {
                                     icon="ri-delete-bin-line"/>
                         </form>
                     </div>
-                    <div v-if="isOwner" class="text-nowrap">
-                        <form @submit.prevent="form.delete(route('adventures.locations.destroy', [props.adventure, location.slug]))">
-                            <Button type="submit"
-                                    raised
-                                    severity="danger"
-                                    label="Ort löschen"
-                                    icon="ri-delete-bin-line"/>
-                        </form>
+                    <div v-if="isOwner"
+                         class="text-nowrap">
+                        <Button @click="confirmDelete($event)"
+                                raised
+                                severity="danger"
+                                label="Ort löschen"
+                                icon="ri-delete-bin-line"/>
                     </div>
                 </div>
             </div>
@@ -116,21 +163,22 @@ watch(() => props.location, (newLocation) => {
                                             aria-label="Abbrechen"
                                             severity="danger"
                                             icon="ri-close-line"
-                                            @click="closeInput"/>
+                                            @click="confirmCloseInput"/>
                                 </div>
                             </div>
                             <div v-if="!inputIsOpen"
                                  class="bg-surface-0 rounded-lg">
-                                <div class="prose prose-sm px-4 py-2 bg-surface-0 rounded-lg"
+                                <div class="max-w-none w-full prose prose-sm px-4 py-2 bg-surface-0 rounded-lg"
                                      v-html="location.name">
                                 </div>
                             </div>
                             <div class="bg-surface-0 rounded-lg"
                                  v-else>
-                                <InputText class="w-full prose prose-sm px-4 py-2 bg-surface-0 rounded-lg"
+                                <InputText class="max-w-none w-full prose prose-sm px-4 py-2 bg-surface-0 rounded-lg"
                                            v-model="form.name"/>
                             </div>
-                            <div v-if="form.errors.name" class="text-red-500 mt-2">
+                            <div v-if="form.errors.name"
+                                 class="text-red-500 mt-2">
                                 {{ form.errors.name }}
                             </div>
                         </div>
@@ -138,7 +186,8 @@ watch(() => props.location, (newLocation) => {
                             <h3 class="text-lg font-semibold mt-4 mb-1">Verwaltet von</h3>
                             <p class="prose prose-sm px-4 py-2 bg-surface-0 rounded-lg">{{ location.user_name }}</p>
                         </div>
-                        <div v-if="isOwner" class="flex flex-col items-center mt-4 gap-2">
+                        <div v-if="isOwner"
+                             class="flex flex-col items-center mt-4 gap-2">
                             <label class="font-semibold text-lg">Öffentlich</label>
                             <InputSwitch v-model="form.public"
                                          @update:model-value="value => { form.public = value; saveData();}"/>
@@ -171,7 +220,7 @@ watch(() => props.location, (newLocation) => {
                                         aria-label="Abbrechen"
                                         severity="danger"
                                         icon="ri-close-line"
-                                        @click="closeEditor"/>
+                                        @click="confirmCloseEditor"/>
                             </div>
                         </div>
                         <div v-if="!editorIsOpen"

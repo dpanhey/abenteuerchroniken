@@ -4,6 +4,8 @@ import {useForm} from "@inertiajs/vue3";
 import {ref, watch} from "vue";
 import InputText from "primevue/inputtext";
 import WysiwygEditor from "@/Components/WysiwygEditor.vue";
+import {useConfirm} from "primevue/useconfirm";
+import ConfirmPopup from "primevue/confirmpopup";
 
 const props = defineProps(['adventure', 'chapter']);
 
@@ -14,6 +16,10 @@ const form = useForm({
 
 const saveData = () => {
     form.put(route('adventures.chapters.update', [props.adventure.slug, props.chapter.slug]), {preserveScroll: true}); // Save to the database
+};
+
+const deleteChapter = () => {
+    form.delete(route('adventures.chapters.destroy', [props.adventure.slug, props.chapter.slug]));
 };
 
 const editorIsOpen = ref(false);
@@ -47,6 +53,47 @@ const closeInput = () => {
     form.title = props.chapter.title;
 };
 
+const confirm = useConfirm();
+
+const confirmDelete = () => {
+    confirm.require({
+        target: event.currentTarget,
+        message: 'Kapitel löschen?',
+        icon: 'ri-alert-line',
+        acceptLabel: 'Löschen',
+        rejectLabel: 'Abbrechen',
+        accept: () => {
+            deleteChapter();
+        }
+    });
+};
+
+const confirmCloseInput = () => {
+    confirm.require({
+        target: event.currentTarget,
+        message: 'Änderungen verwerfen?',
+        icon: 'ri-alert-line',
+        acceptLabel: 'Verwerfen',
+        rejectLabel: 'Abbrechen',
+        accept: () => {
+            closeInput();
+        }
+    });
+};
+
+const confirmCloseEditor = () => {
+    confirm.require({
+        target: event.currentTarget,
+        message: 'Änderungen verwerfen?',
+        icon: 'ri-alert-line',
+        acceptLabel: 'Verwerfen',
+        rejectLabel: 'Abbrechen',
+        accept: () => {
+            closeEditor();
+        }
+    });
+};
+
 watch(() => props.chapter, (newChapter) => {
     form.title = newChapter.title;
     form.content = newChapter.content;
@@ -54,24 +101,23 @@ watch(() => props.chapter, (newChapter) => {
 </script>
 
 <template>
+    <ConfirmPopup></ConfirmPopup>
     <div class="min-h-screen h-fit flex flex-col w-full p-6 bg-surface-100 dark:bg-surface-900 rounded-lg gap-24">
         <div class="flex flex-col w-full">
             <div class="flex justify-between gap-5">
                 <h2 class="font-semibold text-2xl mb-4 ml-4">Kapitelübersicht</h2>
                 <div class="flex gap-5">
                     <div class="text-nowrap">
-                        <form @submit.prevent="form.delete(route('adventures.chapters.destroy', [adventure.slug, chapter.slug]))">
-                            <Button type="submit"
-                                    raised
-                                    severity="danger"
-                                    label="Kapitel löschen"
-                                    icon="ri-delete-bin-line"/>
-                        </form>
+                        <Button @click="confirmDelete($event)"
+                            raised
+                            severity="danger"
+                            label="Kapitel löschen"
+                            icon="ri-delete-bin-line"/>
                     </div>
                 </div>
             </div>
             <div class="flex gap-10">
-                <div class="w-full">
+                <div class="">
                     <div class="flex gap-2 mt-4 mb-1 items-center">
                         <h3 class="text-lg font-semibold">Kapiteltitel</h3>
                         <div v-if="!inputIsOpen">
@@ -98,18 +144,18 @@ watch(() => props.chapter, (newChapter) => {
                                     aria-label="Abbrechen"
                                     severity="danger"
                                     icon="ri-close-line"
-                                    @click="closeInput"/>
+                                    @click="confirmCloseInput"/>
                         </div>
                     </div>
                     <div v-if="!inputIsOpen"
                          class="bg-surface-0 rounded-lg">
-                        <div class="prose prose-sm px-4 py-2 bg-surface-0 rounded-lg"
+                        <div class="prose max-w-none w-full prose-sm px-4 py-2 bg-surface-0 rounded-lg"
                              v-html="chapter.title">
                         </div>
                     </div>
                     <div class="bg-surface-0 rounded-lg"
                          v-else>
-                        <InputText class="w-full prose prose-sm px-4 py-2 bg-surface-0 rounded-lg"
+                        <InputText class="max-w-none w-full prose prose-sm px-4 py-2 bg-surface-0 rounded-lg"
                                    v-model="form.title"/>
                     </div>
                     <div v-if="form.errors.title"
@@ -143,7 +189,7 @@ watch(() => props.chapter, (newChapter) => {
                                         aria-label="Abbrechen"
                                         severity="danger"
                                         icon="ri-close-line"
-                                        @click="closeEditor"/>
+                                        @click="confirmCloseEditor"/>
                             </div>
                         </div>
                         <div v-if="!editorIsOpen"
