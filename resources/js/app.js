@@ -10,6 +10,7 @@ import PrimeVue from "primevue/config";
 import Tooltip from "primevue/tooltip";
 import Lara from "../css/presets/lara";
 import 'remixicon/fonts/remixicon.css';
+import CKEditor from "@ckeditor/ckeditor5-vue";
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -25,6 +26,7 @@ createInertiaApp({
                 ripple: true,
                 pt: Lara,
             })
+            .use(CKEditor)
             .directive('tooltip', Tooltip)
             .mount(el)
     },
