@@ -21,7 +21,7 @@ const saveData = () => {
 };
 
 const deleteNonPlayerCharacter = () => {
-    form.delete(route('adventures.nonplayercharacters.destroy', [props.adventure, props.nonPlayerCharacter.slug]));
+    form.delete(route('adventures.nonplayercharacters.destroy', [props.adventure, props.nonPlayerCharacter.slug]), {preserveScroll: true});
 };
 
 const editorIsOpen = ref(false);

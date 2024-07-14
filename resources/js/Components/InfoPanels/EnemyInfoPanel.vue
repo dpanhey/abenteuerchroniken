@@ -21,7 +21,7 @@ const saveData = () => {
 };
 
 const deleteEnemy = () => {
-    form.delete(route('adventures.enemies.destroy', [props.adventure, props.enemy.slug]));
+    form.delete(route('adventures.enemies.destroy', [props.adventure, props.enemy.slug]), {preserveScroll: true});
 };
 
 const editorIsOpen = ref(false);

@@ -17,11 +17,11 @@ const form = useForm({
 });
 
 const deleteAdventure = () => {
-    form.delete(route('adventures.destroy', props.adventure.slug), {preserveScroll: true});;
+    form.delete(route('adventures.destroy', props.adventure.slug), {preserveScroll: true});
 };
 
 const saveData = () => {
-    form.put(route('adventures.update', props.adventure.slug)); // Save to the database
+    form.put(route('adventures.update', props.adventure.slug), {preserveScroll: true}); // Save to the database
 };
 
 const editorIsOpen = ref(false);

@@ -19,7 +19,7 @@ const saveData = () => {
 };
 
 const deleteChapter = () => {
-    form.delete(route('adventures.chapters.destroy', [props.adventure.slug, props.chapter.slug]));
+    form.delete(route('adventures.chapters.destroy', [props.adventure.slug, props.chapter.slug]), {preserveScroll: true});
 };
 
 const editorIsOpen = ref(false);
@@ -117,7 +117,7 @@ watch(() => props.chapter, (newChapter) => {
                 </div>
             </div>
             <div class="flex gap-10">
-                <div class="">
+                <div class="w-full">
                     <div class="flex gap-2 mt-4 mb-1 items-center">
                         <h3 class="text-lg font-semibold">Kapiteltitel</h3>
                         <div v-if="!inputIsOpen">

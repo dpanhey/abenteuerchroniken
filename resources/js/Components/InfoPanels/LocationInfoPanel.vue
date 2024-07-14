@@ -21,7 +21,7 @@ const saveData = () => {
 };
 
 const deleteLocation = () => {
-    form.delete(route('adventures.locations.destroy', [props.adventure, props.location.slug]));
+    form.delete(route('adventures.locations.destroy', [props.adventure, props.location.slug]), {preserveScroll: true});
 };
 
 const editorIsOpen = ref(false);
