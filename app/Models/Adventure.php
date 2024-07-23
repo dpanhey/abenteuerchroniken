@@ -2,20 +2,22 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Facades\Auth;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
-class Adventure extends Model
+class Adventure extends Model implements HasMedia
 {
     use HasFactory;
     use HasSlug;
+    use InteractsWithMedia;
 
     protected $fillable = [
         'title',
@@ -25,6 +27,17 @@ class Adventure extends Model
         'status',
         'public'
     ];
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('cover')
+            ->singleFile()
+            ->useDisk('adventure-media')
+            ->withResponsiveImages();
+
+        $this->addMediaCollection('description_media')
+            ->useDisk('adventure-media');
+    }
 
     public function casts(): array
     {
@@ -39,6 +52,14 @@ class Adventure extends Model
             ->generateSlugsFrom('title')
             ->saveSlugsTo('slug')
             ->slugsShouldBeNoLongerThan(50);
+    }
+
+    public function getCoverUrl(): string
+    {
+        if (!$this->hasMedia('cover')) {
+            return '';
+        }
+        return $this->getFirstMediaUrl('cover');
     }
 
     public function getRouteKeyName()

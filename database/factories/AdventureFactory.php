@@ -25,7 +25,7 @@ class AdventureFactory extends Factory
             'title' => fake()->realText(50),
             'slug' => fake()->slug(),
             'description' => fake()->paragraphs(3, true),
-            'cover' => fake()->imageUrl(),
+            'cover' => null,
             'public' => fake()->boolean(),
         ];
     }

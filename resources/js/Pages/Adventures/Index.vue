@@ -8,6 +8,7 @@ import MainPanel from "@/Components/MainPanel.vue";
 import CreateAdventureForm from "@/Components/DialogForms/CreateAdventureDialogForm.vue";
 import Dialog from "primevue/dialog";
 import {ref} from "vue";
+import Image from "primevue/image";
 
 const visible = ref(false);
 
@@ -43,12 +44,26 @@ defineProps(['adventures']);
                         <div class="grid gap-6 bg-surface-0">
                             <div v-for="(adventure, index) in slotProps.items"
                                  :key="index"
-                                 class="col-12 max-h-[60rem] min-h-[15rem] flex">
+                                 class="col-12 lg:max-h-[24rem] md:max-h-[18rem] min-h-[15rem] flex">
                                 <div class="bg-surface-100 dark:bg-surface-900 flex p-4 gap-10 w-full border-1 border-surface-200 dark:border-surface-700 rounded-xl shadow-md shadow-surface-400 dark:shadow-surface-700">
-                                    <div class="w-3/5 h-full">
-                                        <img class="block xl:block mx-auto h-full rounded-md object-cover"
-                                             :src="`${adventure.cover}`"
-                                             :alt="adventure.title"/>
+                                    <div class="flex justify-center w-full lg:max-h-[24rem] md:max-h-[18rem]">
+                                        <Image alt="Adventure-Cover"
+                                               preview>
+                                            <template #indicatoricon>
+                                                <i class="ri-search-eye-line"></i>
+                                            </template>
+                                            <template #image>
+                                                <img :src="adventure.cover"
+                                                     class="w-full h-full object-cover"
+                                                     alt="Adventure-Cover-Thumbnail"/>
+                                            </template>
+                                            <template #preview="slotProps">
+                                                <img :src="adventure.cover"
+                                                     alt="Adventure-Cover-Preview"
+                                                     :style="slotProps.style"
+                                                     @click="slotProps.onClick"/>
+                                            </template>
+                                        </Image>
                                     </div>
                                     <div class="flex justify-between gap-4 w-full">
                                         <div>
@@ -59,7 +74,7 @@ defineProps(['adventures']);
                                                     </h3>
                                                 </div>
                                                 <div v-html="adventure.description"
-                                                     class="prose prose-sm text-surface-700 dark:text-surface-0/80 mt-2 text-justify overflow-ellipsis">
+                                                     class="prose prose-sm text-surface-700 dark:text-surface-0/80 mt-2 px-1 text-justify overflow-auto">
                                                 </div>
 
                                                 <div v-if="adventure.chapters.length === 0" class="flex mx-auto mt-4">

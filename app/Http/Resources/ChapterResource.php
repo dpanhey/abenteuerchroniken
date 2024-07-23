@@ -20,7 +20,6 @@ class ChapterResource extends JsonResource
             'slug' => $this->slug,
             'adventure' => $this->whenLoaded('adventure', fn () => AdventureResource::make($this->adventure)),
             'content' => $this->content,
-            'html' => $this->html,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

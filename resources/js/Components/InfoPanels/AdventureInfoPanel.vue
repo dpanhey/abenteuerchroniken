@@ -7,13 +7,17 @@ import WysiwygEditor from "@/Components/WysiwygEditor.vue";
 import InputText from "primevue/inputtext";
 import {useConfirm} from "primevue/useconfirm";
 import ConfirmPopup from "primevue/confirmpopup";
+import FileUpload from 'primevue/fileupload';
+import Image from 'primevue/image';
 
-const props = defineProps(['adventure', 'isOwner']);
+const props = defineProps(['adventure', 'isOwner', 'img']);
 
 const form = useForm({
     title: props.adventure.title,
     description: props.adventure.description,
-    public: props.adventure.public
+    public: props.adventure.public,
+    cover: null,
+    _method: 'PUT'
 });
 
 const deleteAdventure = () => {
@@ -21,7 +25,13 @@ const deleteAdventure = () => {
 };
 
 const saveData = () => {
-    form.put(route('adventures.update', props.adventure.slug), {preserveScroll: true}); // Save to the database
+    form.post(route('adventures.update', props.adventure.slug),
+        {
+            preserveScroll: true,
+            onSuccess: () => {
+                form.cover = null;
+            }
+        });
 };
 
 const editorIsOpen = ref(false);
@@ -98,6 +108,11 @@ const confirmCloseEditor = () => {
             closeEditor();
         }
     });
+};
+
+const handleFileUpload = (event) => {
+    form.cover = event.files[0];
+    saveData();
 };
 
 watch(() => props.adventure, (newAdventure) => {
@@ -182,11 +197,40 @@ watch(() => props.adventure, (newAdventure) => {
                         <h3 class="text-lg font-semibold mt-4 mb-1">Erstellt von</h3>
                         <p class="prose prose-sm px-4 py-2 bg-surface-0 rounded-lg">{{ adventure.user_name }}</p>
                     </div>
-                    <div class="w-1/2 max-w-md">
-                        <h3 class="text-lg font-semibold mt-4 mb-1">Abenteuercover</h3>
-                        <img class="block xl:block mx-auto rounded-md object-cover"
-                             :src="`${adventure.cover}`"
-                             :alt="adventure.title"/>
+                    <div class="flex flex-col w-1/2 max-w-md">
+                        <div class="flex gap-2 mt-4 mb-1 items-center">
+                            <h3 class="text-lg font-semibold">Abenteuercover</h3>
+                            <div v-if="isOwner">
+                                <FileUpload class="font-bold text-sm text-white !bg-black !h-[24px]"
+                                            mode="basic"
+                                            name="cover"
+                                            accept="image/*"
+                                            :maxFileSize="1000000"
+                                            customUpload
+                                            @uploader="handleFileUpload"
+                                            :auto="true"
+                                            choose-label="Bild hochladen"/>
+                            </div>
+                        </div>
+                        <div class="flex justify-center w-full max-h-[18rem] overflow-hidden">
+                            <Image alt="Adventure-Cover"
+                                   preview>
+                                <template #indicatoricon>
+                                    <i class="ri-search-eye-line"></i>
+                                </template>
+                                <template #image>
+                                    <img :src="adventure.cover"
+                                         class="w-full h-full object-cover"
+                                         alt="Adventure-Cover-Thumbnail"/>
+                                </template>
+                                <template #preview="slotProps">
+                                    <img :src="adventure.cover"
+                                         alt="Adventure-Cover-Preview"
+                                         :style="slotProps.style"
+                                         @click="slotProps.onClick"/>
+                                </template>
+                            </Image>
+                        </div>
                     </div>
                 </div>
                 <section>

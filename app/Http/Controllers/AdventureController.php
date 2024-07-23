@@ -90,6 +90,7 @@ class AdventureController extends Controller
 
         return Inertia::render('Adventures/Show', [
             'adventure' => fn() => AdventureResource::make($adventure),
+            'userId' => $userId,
             'isOwner' => $isOwner,
         ]);
     }
@@ -115,9 +116,14 @@ class AdventureController extends Controller
             'title' => ['required', 'string', 'max:100'],
             'description' => ['nullable'],
             'public' => 'boolean',
+            'cover' => ['nullable', 'image', 'max:2048'],
         ]);
 
         $adventure->update($data);
+
+        if ($request->hasFile('cover')) {
+            $adventure->addMediaFromRequest('cover')->toMediaCollection('cover');
+        }
 
         return redirect()->route('adventures.show', $adventure);
     }
@@ -132,7 +138,6 @@ class AdventureController extends Controller
         }
 
         $adventure->chapters()->delete();
-        $adventure->locations()->detach();
         $adventure->delete();
 
         return redirect()->route('adventures.index');
